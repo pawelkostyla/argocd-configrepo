@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  repository: pkostyla/argocd-demo-app
+  pullPolicy: IfNotPresent
+  tag: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources: {}
+
+PostSyncTests:
+  enabled: false

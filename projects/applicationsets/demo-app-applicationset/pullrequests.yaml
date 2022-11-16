@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: pr-demo-app
+  namespace: argocd
+spec:
+  # https://argocd-applicationset.readthedocs.io/en/stable/Generators/
+  generators:
+    - pullRequest:
+        github:
+          owner: pawelkostyla
+          repo: argocd-demo-app
+          tokenRef:
+            secretName: github-secret
+            key: token
+        requeueAfterSeconds: 60
+  template:
+    metadata:
+      name: 'pr.demo-app.{{head_sha}}'
+    spec:
+      project: applicationsets
+      source:
+        path: ./charts/demo-app
+        repoURL: https://github.com/pawelkostyla/argocd-configrepo.git
+        targetRevision: HEAD
+        helm:
+          parameters:
+            - name: "image.tag"
+              value: "{{head_sha}}.pr"
+          releaseName: 'demo-app-{{head_sha}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: develop
+      syncPolicy:
+        automated: {}

@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  annotations:
+    argocd-autopilot.argoproj-labs.io/default-dest-server: https://kubernetes.default.svc
+    argocd.argoproj.io/sync-options: PruneLast=true
+    argocd.argoproj.io/sync-wave: "-2"
+  creationTimestamp: null
+  name: applications
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/instance: argocd
+spec:
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  description: applications project
+  destinations:
+  - namespace: '*'
+    server: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  sourceRepos:
+  - '*'
+status: {}
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  annotations:
+    argocd-autopilot.argoproj-labs.io/default-dest-server: https://kubernetes.default.svc
+    argocd.argoproj.io/sync-options: PruneLast=true
+    argocd.argoproj.io/sync-wave: "-2"
+  creationTimestamp: null
+  name: applicationsets
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/instance: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  description: applicationsets project
+  destinations:
+    - namespace: '*'
+      server: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  sourceRepos:
+    - '*'
+status: {}

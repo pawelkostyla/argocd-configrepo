@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: demo-app-applicationset
+  namespace: argocd
+spec:
+  # https://argocd-applicationset.readthedocs.io/en/stable/Generators/
+  generators:
+    - list:
+        elements:
+          - env: staging
+            cluster: in-cluster
+          - env: production
+            cluster: in-cluster
+  template:
+    metadata:
+      name: '{{env}}.demo-app-applicationset'
+    spec:
+      project: applicationsets
+      source:
+        path: ./charts/demo-app
+        repoURL: https://github.com/pawelkostyla/argocd-configrepo.git
+        targetRevision: HEAD
+        helm:
+          valueFiles:
+            - "../../projects/applicationsets/demo-app-applicationset/values/{{env}}.yaml"
+          releaseName: 'demo-app-applicationset'
+      destination:
+        name: '{{cluster}}'
+        namespace: '{{env}}'
+      syncPolicy:
+        automated: {}

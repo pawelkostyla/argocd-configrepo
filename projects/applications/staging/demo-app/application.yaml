@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: staging.demo-app
+  namespace: argocd
+spec:
+  project: applications
+  source:
+    path: ./charts/demo-app
+    repoURL: https://github.com/pawelkostyla/argocd-configrepo.git
+    targetRevision: master
+    helm:
+      valueFiles:
+        - "../../projects/applications/staging/demo-app/values.yaml"
+      releaseName: demo-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated: {}

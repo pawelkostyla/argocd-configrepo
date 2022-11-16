@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: production.demo-app
+  namespace: argocd
+spec:
+  project: applications
+  source:
+    path: ./charts/demo-app
+    repoURL: https://github.com/pawelkostyla/argocd-configrepo.git
+    targetRevision: master
+    helm:
+      valueFiles:
+        - "../../projects/applications/production/demo-app/values.yaml"
+      releaseName: demo-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: production

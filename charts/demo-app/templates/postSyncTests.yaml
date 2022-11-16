@@ -1,0 +1,22 @@
+{{- if .Values.PostSyncTests.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: '{{ include "demo-app.fullname" . }}-'
+  labels:
+    {{- include "demo-app.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+spec:
+  template:
+    spec:
+      containers:
+        - name: post-sync-test
+          image: curlimages/curl
+          command:
+            - 'curl'
+            - '-i'
+            - '{{ include "demo-app.fullname" . }}:{{ .Values.service.port }}'
+      restartPolicy: Never
+  backoffLimit: 2
+{{- end }}
